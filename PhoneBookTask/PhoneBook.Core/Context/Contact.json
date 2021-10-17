@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "e43aef02-2720-4b9b-a865-837dc07b8aa0",
+    "Name": "Elcan",
+    "Surname": "ss",
+    "Number1": "112",
+    "Number2": "1212",
+    "Number3": "",
+    "Address": "assas",
+    "Email": "Elcan@gmail.com",
+    "Website": "",
+    "Description": ""
+  },
+  {
+    "Id": "8c13b1f2-920c-4085-a20c-7412ea37ea83",
+    "Name": "rtt",
+    "Surname": "tttt",
+    "Number1": "ttt",
+    "Number2": "tt",
+    "Number3": "tt",
+    "Address": "tttt",
+    "Email": "ttt",
+    "Website": "tt",
+    "Description": "tt"
+  },
+  {
+    "Id": "617d31b0-416f-489b-a86a-cacd29835c9d",
+    "Name": "sdssdsd",
+    "Surname": "sdsddfdf",
+    "Number1": "ssdsd",
+    "Number2": "",
+    "Number3": "",
+    "Address": "",
+    "Email": "",
+    "Website": "",
+    "Description": ""
+  }
+]

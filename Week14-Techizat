@@ -1,0 +1,74 @@
+create Database Techizat
+use Techizat
+
+create table [User](
+Id int primary key,
+Username nvarchar(50),
+[Password] nvarchar(50)
+)
+
+create table DocumentLevels(
+Id int primary key,
+[Name] nvarchar(50),
+UserId int,
+[Order] int,
+constraint FK_UserDocuments Foreign key(UserId) references [User](Id)
+)
+
+create table Document(
+Id int primary key,
+Title nvarchar(50),
+Descriptions nvarchar(Max),
+CreateById int,
+RecordDate datetime default getdate(),
+DocumentLevelId int,
+constraint FK_CreateDocumentUser  Foreign Key(CreateById) References [User](Id),
+constraint FK_DocumentLevelDocument  Foreign Key(DocumentLevelId) References DocumentLevels(Id),
+)
+
+create table [File](
+Id int primary key,
+[FileName] nvarchar(50),
+FileUrl nvarchar(Max),
+DocumentId int,
+constraint FK_DocumentFile foreign key(DocumentId) references Document(Id)
+)
+
+
+Create table [Status](
+Id int primary key,
+[Name] nvarchar(50)
+)
+
+Create table DocumentApprovallRequest(
+Id Int primary key,
+CreateById int,
+UpdateById int,
+StatusId int,
+DocumentId int,
+constraint FK_CreateDARUser foreign key(CreateById) references [User](Id),
+constraint FK_UpdateDARUser foreign key(UpdateById) references [User](Id),
+constraint FK_SatusDARStatus foreign key(StatusId) references [Status](Id),
+constraint FK_DocumentDARDocument foreign key(DocumentId) references Document(Id)
+)
+
+Create table DocumentComment(
+Id int primary key,
+Comment nvarchar(Max),
+CreateById int,
+DocumentId int,
+constraint FK_CreateDCUser foreign key(CreateById)references [User](Id),
+constraint FK_DocumentDCUDocument foreign key(DocumentId) references Document(Id)
+)
+
+Create table DocHistories(
+Id int primary key,
+CreateById int,
+DocumentId int,
+OldDocumentLevelId int,
+NewDocumentLevelId int,
+constraint FK_CreateDHUser foreign key(CreateById)references [User](Id),
+constraint FK_DocumentDHDocument foreign key(DocumentId) references Document(Id),
+constraint FK_OldDocumentDHDL foreign key(OldDocumentLevelId) references DocumentLevels(Id),
+constraint FK_NewDocumentDHDL foreign key(NewDocumentLevelId) references DocumentLevels(Id),
+)

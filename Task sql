@@ -1,0 +1,135 @@
+/* Task like
+-- HumanResource.Employee
+-- NationalIDNumber sutunu icerisinde 96 olan
+-- JobTitle deyeri ReSearch ile baslayan
+-- Gender M olan 
+-- iscilerin getirilmesi.
+
+-- Sales.SalesOrderDetail 
+-- ProductID deyeri 100-den boyuk 1000-den kicik
+-- CarrierTrackingNumber son iki deyeri 'AE'
+-- sifaris detallarinin getirilmesi.
+*/
+select * from HumanResources.Employee where NationalIDNumber=96 and JobTitle like 'ReSearch%' and Gender='M'
+select * from Sales.SalesOrderDetail where ProductID Between 100 and 1000 and CarrierTrackingNumber like '%AE'
+
+/*
+Production.Product,
+Production.ProductSubcategory,
+Production.ProductCategory    
+
+cedvellerinden istifade ederek  asagidaki kimi resultin getirilmesi ucun query yazin
+-- ProductId
+-- Name
+-- CategoryName
+-- SubCategoryName
+-- ListPrice  
+*/
+select pr.ProductId,pr.[Name],pc.[Name],ps.[Name],pr.ListPrice from Production.Product pr 
+join Production.ProductSubcategory ps 
+on pr.ProductSubcategoryID=ps.ProductSubcategoryID 
+join Production.ProductCategory pc 
+on ps.ProductCategoryID=pc.ProductCategoryID
+
+/*
+Production.Product,Production.ProductModel cedvellerinden istifade ederek
+asagidaki kimi resultin getirilmesi ucun query yazin
+
+Name,ModelName, Size,Color
+
+Size null ola bilmez.
+*/
+select pr.[Name],pm.[Name],pr.Size,pr.Color from Production.Product pr
+join Production.ProductModel pm
+on pr.ProductModelID=pm.ProductModelID where pr.Size!='null'
+
+/*
+Production.Product
+Production.ProductSubcategory
+Production.ProductCategory
+
+cedvellerinden istifade ederek asagidaki kimi resultin getirilmesi ucun query yazin
+
+Id,Name,CategoryName,SubCategoryName
+
+680	HL Road Frame - Black, 58	Components	Road Frames
+706	HL Road Frame - Red, 58	Components	Road Frames
+707	Sport-100 Helmet, Red	Accessories	Helmets
+708	Sport-100 Helmet, Black	Accessories	Helmets
+709	Mountain Bike Socks, M	Clothing	Socks
+710	Mountain Bike Socks, L	Clothing	Socks
+711	Sport-100 Helmet, Blue	Accessories	Helmets
+*/
+ 
+select pr.ProductId as Id,pr.[Name],pc.[Name] as CategoryName,ps.[Name] as SubCategoryName from Production.Product pr 
+join Production.ProductSubcategory ps 
+on pr.ProductSubcategoryID=ps.ProductSubcategoryID 
+join Production.ProductCategory pc 
+on ps.ProductCategoryID=pc.ProductCategoryID
+
+/*
+Production.Product
+cedvellerinden istifade ederek asagidaki kimi resultin getirilmesi ucun query yazin
+
+Size, Color, SafetyStockLevel sayi
+
+Size ve Color null ola bilmez.
+
+XL	Black	4
+XL	Multi	4
+XL	Yellow	4
+S	Black	20
+S	Blue	4
+S	Multi	8
+S	Yellow	4
+M	Black	20
+
+*/
+select Size, Color, SUM(SafetyStockLevel) from Production.Product where Size!='null' and Color!='null'
+Group by Size,Color order by Size desc 
+
+/*
+Production.Product , Sales.SalesOrderDetail 
+cedvellerinden istifade ederek Color-a ve Size gore qruplasdirilmis Size (tersden) gore siralanmis query yazin. 
+
+Color	Size ProductCount	Unitprice
+Multi	XL	 770416	        39989,5456
+Yellow	XL	 799136	        37925,8154
+Black	S	 2020174	        83236,7571
+Blue	S	 589248	        29917,39
+Multi	S	 503382	        33921,9236
+Yellow	S	 631677	        31970,7184
+White	M	 651574	        5332,1466
+*/
+
+select pr.Color,pr.Size,SUM(so.UnitPrice) as UnitPrice,SUM(pr.ProductID) as ProductCount   
+from Production.Product pr 
+join Sales.SalesOrderDetail so on pr.ProductID=so.ProductID where size!='null'
+GROUP BY pr.Color,pr.Size
+order by(Size) desc
+
+
+
+/*
+  Person.Person
+  Person.PersonPhone
+  Person.PhoneNumberType
+  cedvellerinden istifade ederek asagidaki kimi resultin getirilmesi ucun query yazin
+  BusinessEntityID	    Fullname	    Type	   Number
+  285	                Syed Abbas	    Work	926-555-0182
+  293	                Catherine Abel	Cell	747-555-0171
+  295	                Kim Abercrombie	Work	334-555-0137
+  2170	                Kim Abercrombie	Work	919-555-0100
+  38	                Kim Abercrombie	Cell	208-555-0114
+  211	                Hazem Abolrous	Work	869-555-0125
+  2357	                Sam Abolrous	Work	567-555-0100
+  */
+
+  select pr.BusinessEntityID,pr.FirstName+' '+pr.LastName as FullName,pt.[Name] ,pp.PhoneNumber
+  from Person.Person pr 
+  join Person.PersonPhone pp on pr.BusinessEntityID=pp.BusinessEntityID
+  join Person.PhoneNumberType pt on pp.PhoneNumberTypeID= pt.PhoneNumberTypeID
+  
+  
+
+  

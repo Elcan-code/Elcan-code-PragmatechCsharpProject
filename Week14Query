@@ -1,0 +1,131 @@
+
+
+use Techizat
+create function LoginUser(@username nvarchar(50),@password  nvarchar(50))
+returns int
+as
+begin
+declare @userid int
+if ( exists(select * from [User] where Username=@username and [Password]=@password  ))
+begin
+select @userid=id from [User] where Username=@username and [Password]=@password 
+end
+else
+begin
+set @userid=0
+end
+
+return @userid
+end
+
+--select dbo.LoginUser('e','e')
+
+create proc GetAllDocument 
+(@userid int)
+as
+begin
+select * from Document where CreateById=@userid
+end
+
+--declare @userid int
+--select @userid=dbo.LoginUser('e','e')
+--exec GetAllDocument @userid=@userid
+
+
+create proc WaitingDocument(@userid int) 
+as
+begin
+select * from Document dc inner join DocumentLevels dl on dl.Id=dc.DocumentLevelId where dl.UserId=@userid 
+end
+
+--declare @userid int
+--select @userid=dbo.LoginUser('e','e')
+--exec WaitingDocument @userid=@userid
+
+
+create proc InsertUser(@username nvarchar(50),@password nvarchar(50))
+	as
+	begin
+	insert into [User](username,[password]) values(@username,@password)
+	end
+
+	exec InsertUser @username='ea',@password='eaa'
+	select*from [User]
+
+
+	
+  create proc InsertDocLevel(@name nvarchar(50),@userid int,@order int)
+  as
+  begin
+  insert into DocumentLevels values(@name ,@userid ,@order)
+  end
+  
+  --exec InsertDocLevel @name='bbb' ,@userid=8 ,@order=8
+  --select*from DocumentLevels
+
+  create view vDocLevel as select 
+  dl.Id,
+  dl.[Name] as DocLevel,
+  us.Username as userName
+ from DocumentLevels dl 
+  join [User] us on dl.UserId=us.Id
+
+  --select * from vDocLevel
+
+
+  create proc UpdateResponsUser(@levelid int,@username nvarchar(50))
+	as
+	begin
+	declare @userid int
+	select @userid=id from [User] where username=@username
+	Update DocumentLevels
+	set userid=@userid where id= @levelid
+	end
+
+	--exec UpdateResponsUser @levelid=4 ,@username='e'
+	--select * from DocumentLevels
+	--select *from [User]
+
+	/*1.c Document Get By Id proc*/
+
+	create proc DocumentGetById(@id int)
+    as
+    begin
+    select * from Document where id=@id
+    end
+
+   -- exec DocumentGetById @id=2
+
+   
+
+
+/*1.d Document Comment Create proc*/
+alter proc DocumentCommentCreate(@Id int,@comment nvarchar(300),@userid int,@documentId int)
+	as
+	begin
+	insert into DocumentComment(Id,Comment,CreateById,DocumentId) values (@Id,@comment,@userid,@documentId)
+	end
+
+	--exec DocumentCommentCreate @Id=2, @comment='Comment001',@userid=1,@documentid=1
+	--select * from DocumentComment
+
+
+/*1.e GetAllDocumentCommentByDocId proc 
+    Username
+    Comment
+    Date*/
+
+	create proc  GetAllDCommentByDocId(@id int)
+	as
+	begin
+	select dc.id, dc.Comment, us.Username as UserName, rd.RecordDate as DocumentRecordDate from DocumentComment dc 
+	inner join [User] us on us.Id=dc.CreateById
+	inner join [Document] rd on dc.DocumentId=rd.id
+	where dc.DocumentId=@id
+	end
+	
+	--exec  GetAllDCommentByDocId @id=1
+	
+
+
+	
