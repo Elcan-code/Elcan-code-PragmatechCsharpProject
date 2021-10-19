@@ -28,7 +28,7 @@ namespace PhoneBook.Business.Services
         {
             _contactRepository = contactRepository;
       
-            _exportPath = @"C:\Users\elcan\Source\Repos\PragmatechCsharpProject1\PhoneBookTask\PhoneBook.Core\Context\export\";
+            _exportPath = @"C:\Users\elcan\Source\Repos\Elcan-code-PragmatechCsharpProject\PhoneBookAdo\PhoneBook.Core\Context\export\";
         }
 
         public int Add(Contact entity)

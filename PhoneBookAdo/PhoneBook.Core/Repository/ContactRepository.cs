@@ -15,12 +15,7 @@ namespace PhoneBook.Core.Repository
         }
 
 
-        private SqlDataReader GetAllData()
-        {
-            _context.Command = new SqlCommand("Select * from Contact",_context.Connection);
-            _context.SetConnection();
-            return _context.Command.ExecuteReader();
-        }
+      
         public int Add(Contact entity)
         {
             try
@@ -78,7 +73,12 @@ namespace PhoneBook.Core.Repository
             return _context.ReturnValues;
           
         }
-
+        private SqlDataReader GetAllData()
+        {
+            _context.Command = new SqlCommand("Select * from Contact", _context.Connection);
+            _context.SetConnection();
+            return _context.Command.ExecuteReader();
+        }
         public List<Contact> GetAll()
         {
             List<Contact> entities = new List<Contact>();
@@ -119,7 +119,8 @@ namespace PhoneBook.Core.Repository
         {
             try
             {
-                _context.Command = new SqlCommand("update Contact set [Name]=@Name,Surname=@Surname,Adress=@Address,Number1=@Number1,Number2=@Number2,Number3=@Number3,Email=@Email,Website=@Website,Description=@Description where Id=@Id",_context.Connection);
+                _context.Command = new 
+                SqlCommand("update Contact set [Name]=@Name,Surname=@Surname,Adress=@Address,Number1=@Number1,Number2=@Number2,Number3=@Number3,Email=@Email,Website=@Website,Description=@Description where Id=@Id",_context.Connection);
                 _context.Command.Parameters.Add("@Id", SqlDbType.UniqueIdentifier).Value = entity.Id;
                 _context.Command.Parameters.Add("@Name", SqlDbType.NVarChar).Value = entity.Name;
                 _context.Command.Parameters.Add("@Surname", SqlDbType.NVarChar).Value = entity.Surname;

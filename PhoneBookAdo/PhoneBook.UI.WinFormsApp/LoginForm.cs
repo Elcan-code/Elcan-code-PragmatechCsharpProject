@@ -16,17 +16,6 @@ namespace PhoneBook.UI.WinFormsApp
             InitializeComponent();
         }
 
-        private void txtBox_Enter(object sender, EventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            textBox.BackColor = Color.DarkGray;
-        }
-
-        private void txtBox_Leave(object sender, EventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            textBox.BackColor = Color.White;
-        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -52,19 +41,7 @@ namespace PhoneBook.UI.WinFormsApp
                 }
                 else { MessageBox.Show(GlobalConstants.Required, GlobalConstants.CaptionInfo, MessageBoxButtons.OK, MessageBoxIcon.Information); }
 
-                //switch (result)
-                //{
-                //    case > 0:
-                //        PhoneBookForm form = new PhoneBookForm();
-                //        form.Show();
-                //        break;
-                //    case (int)ResultCodeEnums.ModelStateNoValid:
-                //        MessageBox.Show(GlobalConstants.Required, GlobalConstants.CaptionInfo, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //        break;
-                //    default:
-                //        MessageBox.Show(GlobalConstants.InvalidAttempt, GlobalConstants.CaptionInfo, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //        break;
-                //}
+          
 
             }
             else
@@ -80,9 +57,36 @@ namespace PhoneBook.UI.WinFormsApp
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
+         
+        }
+
+        private void txtBoxUsername_MouseDown(object sender, MouseEventArgs e)
+        {
+            txtBoxUsername.BackColor = Color.DarkSlateGray;
+            txtBoxUsername.ForeColor = Color.White;
+            txtBoxPassword.BackColor = Color.White;
+            txtBoxPassword.ForeColor = Color.Black;
+        }
+
+        private void txtBoxPassword_MouseDown(object sender, MouseEventArgs e)
+        {
+            txtBoxPassword.BackColor = Color.DarkSlateGray;
+            txtBoxPassword.ForeColor = Color.White;
+            txtBoxUsername.ForeColor = Color.Black;
+            txtBoxUsername.BackColor = Color.White;
 
         }
 
-     
+        private void checkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkShowPassword.Checked == false)
+            {
+                txtBoxPassword.PasswordChar = '*';
+            }
+            else
+            {
+                txtBoxPassword.PasswordChar=char.MinValue;
+            }
+        }
     }
 }
