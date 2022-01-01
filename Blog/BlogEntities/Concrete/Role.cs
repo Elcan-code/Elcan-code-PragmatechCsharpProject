@@ -1,5 +1,6 @@
 ﻿
 using BlogShared.Entities;
+using BlogShared.Entities.Abstract;
 using System.Collections.Generic;
 
 namespace BlogEntities.Concrete

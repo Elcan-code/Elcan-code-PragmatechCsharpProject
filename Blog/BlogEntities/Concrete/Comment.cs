@@ -1,4 +1,5 @@
 ﻿using BlogShared.Entities;
+using BlogShared.Entities.Abstract;
 
 namespace BlogEntities.Concrete
 {

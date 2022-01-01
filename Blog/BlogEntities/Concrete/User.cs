@@ -1,7 +1,9 @@
 ﻿
 using BlogShared.Entities;
+using BlogShared.Entities.Abstract;
 using BlogShared.Extensions;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace BlogEntities.Concrete
 {
@@ -17,7 +19,10 @@ namespace BlogEntities.Concrete
         public string PasswordHash { get; set; }
         public string Avatar { get; set; }
         public string Bio { get; set; }
+     
         public Role Role { get; set; }
+        public ICollection<Post> Posts { get; set; }
+
         public void SetEmailConfirmed(bool control)
         {
             this.IsEmailConfirmed = control;

@@ -1,22 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogShared.Entities
+namespace BlogShared.Entities.Abstract
 {
-   public abstract class EntityBase
+
+    public abstract class EntityBase
     {
+        protected EntityBase()
+        {
+
+        }
+
+        protected EntityBase(string note) : this()
+        {
+            this.Note = note;
+        }
         public virtual int Id { get; set; }
+        [Required]
         public virtual bool IsActive { get; private set; } = true;
+        [Required]
         public virtual bool IsDeleted { get; private set; } = false;
+        [Required]
         public virtual DateTime CreatedDate { get; set; } = DateTime.Now;
+        [Required]
         public virtual DateTime ModifiedDate { get; set; } = DateTime.Now;
 
-        public virtual string Note { get; private set; }
+        [MaxLength(500)]
+        public virtual string Note { get; set; }
 
+        [Required]
         public virtual string CreatedByName { get; private set; } = "Admin";
+        [Required]
         public virtual string ModifiedByName { get; private set; } = "Admin";
 
         // methods
@@ -51,4 +69,4 @@ namespace BlogShared.Entities
             }
         }
     }
-}
+    }

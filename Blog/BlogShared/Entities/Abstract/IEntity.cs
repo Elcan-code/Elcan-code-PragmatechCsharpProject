@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogShared.Entities
+namespace BlogShared.Entities.Abstract
 {
-   public interface IEntity
+    public interface IEntity
     {
-
     }
 }

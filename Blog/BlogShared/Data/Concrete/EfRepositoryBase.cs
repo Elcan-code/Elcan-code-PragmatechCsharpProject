@@ -1,4 +1,6 @@
-﻿using BlogShared.Entities;
+﻿
+using BlogShared.Data.Abstract;
+using BlogShared.Entities.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,79 +12,89 @@ namespace BlogShared.Data.Concrete
 {
     public class EfRepositoryBase<TEntity> : IEntityRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        #region Field
+        #region fields
+
         private readonly DbContext _context;
-        private readonly DbSet<TEntity> _dbset;
+        private readonly DbSet<TEntity> _dbSet;
         #endregion
-        #region Ctor
+        #region ctor
+
         public EfRepositoryBase(DbContext context)
         {
             _context = context;
-            _dbset = context.Set<TEntity>();
-        }
-        #endregion
-
-        public async Task AddAsync(TEntity entity)
-        {
-             await _dbset.AddAsync(entity);
-        }
-
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await _dbset.AnyAsync(predicate);
+            _dbSet = context.Set<TEntity>();
         }
 
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await _dbset.CountAsync(predicate);
-        }
+            IQueryable<TEntity> query = _dbSet;
 
-        public async 
-            Task DeleteAsync(TEntity entity)
-        {
-            await Task.Run(() => { _dbset.Remove(entity); });
-        }
-
-        public async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            IQueryable<TEntity> query = _dbset;
             if (predicate is not null)
             {
                 query = query.Where(predicate);
             }
+
             if (includeProperties is not null)
             {
-                foreach (var item in includeProperties)
+                foreach (var includeProperty in includeProperties)
                 {
-                    query = query.Include(item);
+                    query = query.Include(includeProperty);
                 }
+            }
 
-            }
-            return await query.ToListAsync();
-        }
-
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            IQueryable<TEntity> query = _dbset;
-            if(predicate is not null)
-            {
-                query = query.Where(predicate);
-            }
-            if(includeProperties is not null)
-            {
-                foreach(var item in includeProperties)
-                {
-                    query = query.Include(item);
-                }
-                
-            }
             return await query.SingleOrDefaultAsync();
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            await Task.Run(()=> { _dbset.Update(entity); });
+            IQueryable<TEntity> query = _dbSet;
+            // where 
+            if (predicate is not null)
+            {
+                query = query.Where(predicate);
+            }
+            // left join
+            if (includeProperties is not null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+
+            return await query.ToListAsync();
         }
+
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbSet.CountAsync(predicate);
+        }
+
+        public async Task<TEntity> AddAsync(TEntity entity)
+        {
+            await _dbSet.AddAsync(entity);
+            return entity;
+        }
+
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            await Task.Run(() => { _dbSet.Update(entity); });
+            return entity;
+        }
+
+        public async Task<TEntity> DeleteAsync(TEntity entity)
+        {
+            await Task.Run(() => { _dbSet.Remove(entity); });
+            return entity;
+        }
+
+        #endregion
     }
 }
